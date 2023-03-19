@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [time, setTime] = useState(0);
+  const [timeInput, setTimeInput] = useState();
+  const timer = (e) => {
+    if (e.key === "Enter" && timeInput > 0) {
+      setTime(timeInput);
+    }
+  };
+  useEffect(() => {
+    let interval = null;
+    if (time > 0) {
+      interval = setInterval(() => setTime((prevTime) => prevTime - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [time]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="number"
+        onChange={(e) => setTimeInput(parseInt(e.target.value))}
+        onKeyDown={timer}
+      />
+      <div id="current-time">{time}</div>
     </div>
   );
 }
